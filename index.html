@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ╔═══════════════════════════════════════════════════════════╗
-  ║   🪄  Emojis Come to Life                                ║
-  ║   March 2026 · Built for fun in Dong Nai, VN             ║
-  ║                                                           ║
-  ║   1. Get your API key: https://enter.pollinations.ai      ║
-  ║   2. Open script.js → paste sk-... key into API_KEY      ║
-  ║   3. Open index.html in browser → emoji chaos → art!     ║
-  ╚═══════════════════════════════════════════════════════════╝
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,99 +8,119 @@
 </head>
 <body>
 
-  <!-- Ambient background orbs -->
+  <div id="key-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-icon">🌸</div>
+      <h2 class="modal-title" id="modal-title">Bring Your Own Pollen</h2>
+      <p class="modal-desc">
+        Generation uses <strong>your own Pollinations balance</strong>.
+        Your key is stored only in this browser and sent directly to
+        <code>gen.pollinations.ai</code> — nowhere else.
+      </p>
+      <div class="modal-get-key-row">
+        <button id="authorizeBtn" class="btn btn-ghost">Authorize via enter.pollinations.ai</button>
+      </div>
+      <div class="modal-input-row">
+        <input type="password" id="key-input" class="key-input"
+          placeholder="pk_xxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
+        <button id="key-toggle" class="key-eye" title="Toggle visibility" aria-label="Show/hide key">👁</button>
+      </div>
+      <div id="key-status" class="key-status hidden"></div>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn btn-ghost btn-sm">Cancel</button>
+        <button id="modal-save" class="btn btn-primary" disabled>Connect ✨</button>
+      </div>
+      <p class="modal-fine">
+        Use a <strong>Publishable Key (pk_)</strong> — designed for frontend apps.
+        Never put your sk_ secret key in a browser.
+      </p>
+    </div>
+  </div>
+
+  <div id="key-bar" class="key-bar hidden">
+    <span class="key-bar-dot"></span>
+    <span class="key-bar-label">Pollen connected</span>
+    <button id="btn-change-key" class="btn btn-ghost btn-sm">Change key</button>
+  </div>
+
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
 
   <main class="wrapper">
-
-    <!-- ── Header ─────────────────────────────────────── -->
     <header class="hero">
       <div class="title-row">
         <span class="wand" aria-hidden="true">🪄</span>
         <h1 class="title">Emojis Come to Life</h1>
       </div>
       <p class="subtitle">
-        Paste any emoji string&nbsp;·&nbsp;tap&nbsp;<strong>Generate</strong>&nbsp;·&nbsp;watch magic happen
+        Paste any emoji string&nbsp;&middot;&nbsp;tap <strong>Generate</strong>&nbsp;&middot;&nbsp;watch the magic
       </p>
       <p class="examples-hint">
         Try&nbsp;
-        <button class="chip" data-emojis="🐱☕🌧️">🐱☕🌧️</button>
-        <button class="chip" data-emojis="🚀🌕👽🌌">🚀🌕👽🌌</button>
-        <button class="chip" data-emojis="🏍️🍜🌆🌃">🏍️🍜🌆🌃</button>
-        <button class="chip" data-emojis="🧙‍♂️🔮🌲✨">🧙‍♂️🔮🌲✨</button>
-        <button class="chip" data-emojis="🐉🏔️⚡🌊">🐉🏔️⚡🌊</button>
+        <button class="chip" data-emojis="🐱☕🌧️🏠🕯️">🐱☕🌧️🏠🕯️</button>
+        <button class="chip" data-emojis="🚀🌕👽🪐🌌">🚀🌕👽🪐🌌</button>
+        <button class="chip" data-emojis="🏍️🍜🌆🌃⚡">🏍️🍜🌆🌃⚡</button>
+        <button class="chip" data-emojis="🧙‍♂️🔮🌲✨🦉">🧙‍♂️🔮🌲✨🦉</button>
+        <button class="chip" data-emojis="🐉🏔️⚡🌊💥">🐉🏔️⚡🌊💥</button>
       </p>
     </header>
 
-    <!-- ── Input Card ──────────────────────────────────── -->
     <section class="card input-card">
       <label class="label" for="emoji-input">Your emoji sequence</label>
-      <textarea
-        id="emoji-input"
-        class="emoji-textarea"
-        placeholder="🌈🦄✨ or 🌊🐳🌅 or anything you dream of…"
-        rows="3"
-        autofocus
-        spellcheck="false"
-        autocomplete="off"
-      ></textarea>
-
+      <textarea id="emoji-input" class="emoji-textarea"
+        placeholder="🌈🦄✨ or 🌊🐳🌅 or anything you imagine…"
+        rows="3" autofocus spellcheck="false" autocomplete="off"></textarea>
       <div class="actions">
-        <button id="btn-random" class="btn btn-ghost" title="Random example">
-          🎲 Surprise me
-        </button>
+        <button id="btn-random" class="btn btn-ghost">🎲 Surprise me</button>
         <button id="btn-generate" class="btn btn-primary">
           Generate Scene <span class="btn-sparkle">✨</span>
         </button>
       </div>
     </section>
 
-    <!-- ── Error Banner ────────────────────────────────── -->
     <div id="error-banner" class="error-banner hidden" role="alert"></div>
 
-    <!-- ── Result Card ─────────────────────────────────── -->
     <section id="result-card" class="card result-card hidden">
-
-      <!-- Loading state -->
       <div id="loading-state" class="loading-state hidden">
+        <div class="step-row">
+          <div class="step-item">
+            <div id="dot-1" class="step-dot active"></div>
+            <span id="lbl-1" class="step-lbl active">Gemini reads emojis</span>
+          </div>
+          <div class="step-arrow">→</div>
+          <div class="step-item">
+            <div id="dot-2" class="step-dot"></div>
+            <span id="lbl-2" class="step-lbl">Flux paints scene</span>
+          </div>
+        </div>
         <div class="brew-ring"></div>
-        <p class="brew-text">Brewing magic<span class="dots"></span></p>
-        <p class="brew-sub">Flux is painting your vision 🌟</p>
+        <p class="brew-text" id="brew-text">Interpreting emojis<span class="dots"></span></p>
+        <p class="brew-sub" id="brew-sub">Gemini is crafting a cinematic prompt 🧠</p>
       </div>
 
-      <!-- Image result -->
       <div id="image-wrapper" class="image-wrapper hidden">
-        <img
-          id="result-img"
-          class="result-img"
-          alt="AI-generated scene from your emojis"
-          loading="eager"
-          decoding="async"
-        />
+        <img id="result-img" class="result-img"
+          alt="AI-generated scene from your emojis" loading="eager" decoding="async" />
         <div class="img-glow" aria-hidden="true"></div>
       </div>
 
-      <!-- Prompt preview + actions -->
       <div id="result-meta" class="result-meta hidden">
-        <p class="prompt-label">🔎 Prompt used:</p>
+        <p class="prompt-label">🧠 Gemini-crafted prompt sent to Flux:</p>
         <p id="prompt-preview" class="prompt-text"></p>
         <div class="result-actions">
-          <button id="btn-copy" class="btn btn-ghost btn-sm">📋 Copy Image</button>
-          <button id="btn-remix" class="btn btn-ghost btn-sm">🎲 Remix</button>
+          <button id="btn-copy"  class="btn btn-ghost btn-sm">📋 Copy Image</button>
+          <button id="btn-remix" class="btn btn-ghost btn-sm">🎲 Remix seed</button>
           <button id="btn-again" class="btn btn-primary btn-sm">✨ Generate Again</button>
         </div>
       </div>
-
     </section>
-
   </main>
 
-  <!-- ── Footer ─────────────────────────────────────────── -->
   <footer class="footer">
-    Powered by&nbsp;<a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai Flux</a>
-    &nbsp;·&nbsp; Grab an API key: <a href="https://enter.pollinations.ai" target="_blank" rel="noopener">enter.pollinations.ai</a>
+    Powered by <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai</a>
+    &middot; Prompt: <code>gemini-fast</code>
+    &middot; Image: <code>flux</code>
   </footer>
 
   <script src="script.js"></script>
