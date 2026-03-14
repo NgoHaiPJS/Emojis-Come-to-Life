@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!--
+  ╔═══════════════════════════════════════════════════════════╗
+  ║   🪄  Emojis Come to Life                                ║
+  ║   March 2026 · Built for fun in Dong Nai, VN             ║
+  ║                                                           ║
+  ║   1. Get your API key: https://enter.pollinations.ai      ║
+  ║   2. Open script.js → paste sk-... key into API_KEY      ║
+  ║   3. Open index.html in browser → emoji chaos → art!     ║
+  ╚═══════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🪄 Emojis Come to Life</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <main class="wrapper">
+
+    <!-- ── Header ─────────────────────────────────────── -->
+    <header class="hero">
+      <div class="title-row">
+        <span class="wand" aria-hidden="true">🪄</span>
+        <h1 class="title">Emojis Come to Life</h1>
+      </div>
+      <p class="subtitle">
+        Paste any emoji string&nbsp;·&nbsp;tap&nbsp;<strong>Generate</strong>&nbsp;·&nbsp;watch magic happen
+      </p>
+      <p class="examples-hint">
+        Try&nbsp;
+        <button class="chip" data-emojis="🐱☕🌧️">🐱☕🌧️</button>
+        <button class="chip" data-emojis="🚀🌕👽🌌">🚀🌕👽🌌</button>
+        <button class="chip" data-emojis="🏍️🍜🌆🌃">🏍️🍜🌆🌃</button>
+        <button class="chip" data-emojis="🧙‍♂️🔮🌲✨">🧙‍♂️🔮🌲✨</button>
+        <button class="chip" data-emojis="🐉🏔️⚡🌊">🐉🏔️⚡🌊</button>
+      </p>
+    </header>
+
+    <!-- ── Input Card ──────────────────────────────────── -->
+    <section class="card input-card">
+      <label class="label" for="emoji-input">Your emoji sequence</label>
+      <textarea
+        id="emoji-input"
+        class="emoji-textarea"
+        placeholder="🌈🦄✨ or 🌊🐳🌅 or anything you dream of…"
+        rows="3"
+        autofocus
+        spellcheck="false"
+        autocomplete="off"
+      ></textarea>
+
+      <div class="actions">
+        <button id="btn-random" class="btn btn-ghost" title="Random example">
+          🎲 Surprise me
+        </button>
+        <button id="btn-generate" class="btn btn-primary">
+          Generate Scene <span class="btn-sparkle">✨</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── Error Banner ────────────────────────────────── -->
+    <div id="error-banner" class="error-banner hidden" role="alert"></div>
+
+    <!-- ── Result Card ─────────────────────────────────── -->
+    <section id="result-card" class="card result-card hidden">
+
+      <!-- Loading state -->
+      <div id="loading-state" class="loading-state hidden">
+        <div class="brew-ring"></div>
+        <p class="brew-text">Brewing magic<span class="dots"></span></p>
+        <p class="brew-sub">Flux is painting your vision 🌟</p>
+      </div>
+
+      <!-- Image result -->
+      <div id="image-wrapper" class="image-wrapper hidden">
+        <img
+          id="result-img"
+          class="result-img"
+          alt="AI-generated scene from your emojis"
+          loading="eager"
+          decoding="async"
+        />
+        <div class="img-glow" aria-hidden="true"></div>
+      </div>
+
+      <!-- Prompt preview + actions -->
+      <div id="result-meta" class="result-meta hidden">
+        <p class="prompt-label">🔎 Prompt used:</p>
+        <p id="prompt-preview" class="prompt-text"></p>
+        <div class="result-actions">
+          <button id="btn-copy" class="btn btn-ghost btn-sm">📋 Copy Image</button>
+          <button id="btn-remix" class="btn btn-ghost btn-sm">🎲 Remix</button>
+          <button id="btn-again" class="btn btn-primary btn-sm">✨ Generate Again</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    Powered by&nbsp;<a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations.ai Flux</a>
+    &nbsp;·&nbsp; Grab an API key: <a href="https://enter.pollinations.ai" target="_blank" rel="noopener">enter.pollinations.ai</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
